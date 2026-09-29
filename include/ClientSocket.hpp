@@ -32,6 +32,7 @@ public:
     }
 
     void send(const std::string &message) const;
+    ssize_t receive() const;
 
     [[nodiscard]] int native_handle() const noexcept { return fd_; }
 
