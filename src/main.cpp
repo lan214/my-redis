@@ -15,8 +15,9 @@ int main(int argc, char **argv) {
       // You can use print statements as follows for debugging, they'll be visible when running tests.
       std::cout << "Logs from your program will appear here!\n";
 
-      serverSocket.accept();
+      const auto clientSocket = serverSocket.accept();
       std::cout << "Client connected\n";
+      clientSocket.send("+PONG\r\n");
 
       return 0;
   } catch (std::exception &e) {

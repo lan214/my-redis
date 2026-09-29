@@ -14,6 +14,8 @@ include_directories(include)
 
 add_executable(redis ${SOURCE_FILES}
         src/ServerSocket.cpp
+        src/ClientSocket.cpp
+        include/ClientSocket.hpp
 )
 
 target_link_libraries(redis PRIVATE asio asio::asio)

@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+#include "ClientSocket.hpp"
+
 class ServerSocket {
 public:
     explicit ServerSocket(uint16_t port, int backlog=5);
@@ -16,9 +18,9 @@ public:
     ServerSocket(ServerSocket&&) noexcept;
     ServerSocket& operator=(ServerSocket&&) noexcept;
 
-    void accept() const;
+    ClientSocket accept() const;
 
-    [[nodiscard]] int file_descriptor() const noexcept;
+    [[nodiscard]] int native_handle() const noexcept;
     [[nodiscard]] bool is_valid() const noexcept;
 
 private:

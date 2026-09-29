@@ -11,6 +11,8 @@
 #include <sys/socket.h>
 #include <utility>
 
+#include "ClientSocket.hpp"
+
 ServerSocket::ServerSocket(uint16_t port, int backlog) {
     fd_ = ::socket(AF_INET, SOCK_STREAM, 0);
     if (fd_ == -1) {
@@ -58,8 +60,9 @@ ServerSocket &ServerSocket::operator=(ServerSocket &&other) noexcept {
     return *this;
 }
 
-void ServerSocket::accept() const {
-    ::accept(fd_, nullptr, nullptr);
+ClientSocket ServerSocket::accept() const {
+    const auto fd = ::accept(fd_, nullptr, nullptr);
+    return ClientSocket(fd);
 }
 
 void ServerSocket::cleanup() noexcept {
@@ -71,4 +74,4 @@ void ServerSocket::cleanup() noexcept {
 
 bool ServerSocket::is_valid() const noexcept { return fd_ > -1; }
 
-int ServerSocket::file_descriptor() const noexcept { return fd_; }
+int ServerSocket::native_handle() const noexcept { return fd_; }
