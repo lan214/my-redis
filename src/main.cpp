@@ -1,6 +1,21 @@
 #include <iostream>
+#include <thread>
 
 #include "ServerSocket.hpp"
+
+void handleClient(ClientSocket clientSocket) {
+    try {
+        while (true) {
+            if (const auto bytesReceived = clientSocket.receive(); bytesReceived <= 0) {
+                break;
+            }
+            clientSocket.send("+PONG\r\n");
+        }
+        std::cout << std::this_thread::get_id() << ": Client disconnected\n";
+    } catch (std::exception &e) {
+        std::cerr << e.what() << '\n';
+    }
+}
 
 int main(int argc, char **argv) {
     // Flush after every std::cout / std::cerr
@@ -12,14 +27,12 @@ int main(int argc, char **argv) {
 
         std::cout << "Waiting for a client to connect...\n";
 
-        const auto clientSocket = serverSocket.accept();
-        std::cout << "Client connected\n";
-
         while (true) {
-            if (const auto bytesReceived = clientSocket.receive(); bytesReceived <= 0) {
-                break;
-            }
-            clientSocket.send("+PONG\r\n");
+            auto clientSocket = serverSocket.accept();
+            std::cout << "Client connected\n";
+
+            std::thread t(handleClient, std::move(clientSocket));
+            t.detach();
         }
 
         std::cout << "Bye\n";
