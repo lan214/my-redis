@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
 
     try {
         const ServerSocket serverSocket(6379);
+        const int epfd = epoll_create1(0);
 
         std::cout << "Waiting for a client to connect...\n";
 
